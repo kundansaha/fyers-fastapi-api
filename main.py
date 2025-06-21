@@ -1,23 +1,26 @@
-import os
-from fastapi import FastAPI
-from fyers_auth import get_auth_url, get_access_token
+from fastapi import FastAPI, Request
+import requests
 
 app = FastAPI()
 
-@app.get("/")
-def read_root():
-    return {"message": "Welcome to FYERS FastAPI Bot"}
-
-@app.get("/generate-auth-url")
-def auth_url():
-    return {"auth_url": get_auth_url()}
+CLIENT_ID = "DS3ERW52MY-100"  # Replace with your actual App ID
+SECRET_KEY = "YOUR_SECRET_KEY"  # Replace with your actual app secret key
+REDIRECT_URI = "https://fyers-fastapi-api.onrender.com/callback"
 
 @app.get("/callback")
-def callback(auth_code: str):
-    token = get_access_token(auth_code)
-    return token
+def callback(request: Request):
+    auth_code = request.query_params.get("auth_code")
 
-if __name__ == "__main__":
-    import uvicorn
-    port = int(os.environ.get("PORT", 8080))
-    uvicorn.run("main:app", host="0.0.0.0", port=port)
+    if not auth_code:
+        return {"error": "Authorization code not found in query parameters."}
+
+    payload = {
+        "grant_type": "authorization_code",
+        "client_id": CLIENT_ID,
+        "secret_key": SECRET_KEY,
+        "code": auth_code,
+        "redirect_uri": REDIRECT_URI
+    }
+
+    response = requests.post("https://api.fyers.in/api/v3/token", json=payload)
+    return response.json()
