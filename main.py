@@ -3,9 +3,21 @@ import requests
 
 app = FastAPI()
 
-CLIENT_ID = "DS3ERW52MY-100"  # Replace with your actual App ID
-SECRET_KEY = "YOUR_SECRET_KEY"  # Replace with your actual app secret key
+CLIENT_ID = "DS3ERW52MY-100"  # Replace with your real Client ID
+SECRET_KEY = "YOUR_SECRET_KEY"  # Replace with your real Secret Key
 REDIRECT_URI = "https://fyers-fastapi-api.onrender.com/callback"
+
+@app.get("/")
+def home():
+    return {"message": "Welcome to FYERS FastAPI Bot"}
+
+@app.get("/generate-auth-url")
+def generate_auth_url():
+    url = (
+        f"https://api-t1.fyers.in/api/v3/generate-authcode"
+        f"?client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}&response_type=code"
+    )
+    return {"auth_url": url}
 
 @app.get("/callback")
 def callback(request: Request):
