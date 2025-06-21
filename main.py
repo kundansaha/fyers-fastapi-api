@@ -4,7 +4,7 @@ import requests
 app = FastAPI()
 
 CLIENT_ID = "DS3ERW52MY-100"  # Replace with your real Client ID
-SECRET_KEY = "YOUR_SECRET_KEY"  # Replace with your real Secret Key
+SECRET_KEY = "GGBAOXEV1I"  # Replace with your real Secret Key
 REDIRECT_URI = "https://fyers-fastapi-api.onrender.com/callback"
 
 @app.get("/")
